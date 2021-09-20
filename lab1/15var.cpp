@@ -1,4 +1,4 @@
-//for compilation use command g++ -g -Wall -std=c++17 15var.cpp
+//for compilation use command: "g++ -g -Wall -std=c++17 15var.cpp"
 
 #include <iostream>
 #include <fstream>
