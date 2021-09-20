@@ -1,3 +1,5 @@
+//for compilation use command g++ -g -Wall -std=c++17 15var.cpp
+
 #include <iostream>
 #include <fstream>
 #include <fcntl.h>
@@ -12,6 +14,10 @@ int main(){
     std::cout << "Print input name of file: ";
     std::cin >> name_of_file;
     int f = open(name_of_file_c, O_WRONLY | O_CREAT, 0777);
+    if(f == -1){
+        std::cout << "Error during creating file\n";
+        return 5;
+    }
     if(pipe(fd1) == -1){
         std::cout << "Error during creating pipe1\n";
         return 1;
