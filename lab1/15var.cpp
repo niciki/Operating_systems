@@ -1,5 +1,6 @@
 #include <iostream>
 #include <fstream>
+#include <fcntl.h>
 #include "unistd.h"
 
 int main(){
@@ -7,10 +8,10 @@ int main(){
     int fd2[2];
     std::string name_of_file;
     std::string s;
+    const char *name_of_file_c = name_of_file.c_str();
     std::cout << "Print input name of file: ";
     std::cin >> name_of_file;
-    std::ofstream f;
-    f.open(name_of_file);
+    int f = open(name_of_file_c, O_WRONLY | O_CREAT, 0777);
     if(pipe(fd1) == -1){
         std::cout << "Error during creating pipe1\n";
         return 1;
@@ -21,7 +22,6 @@ int main(){
     }
     int id = fork();
     int size;
-    //std::cout << id << "\n";
     switch(id){
         case -1:
             std::cout << "Error during creating fork\n";
@@ -29,6 +29,7 @@ int main(){
             break;
         case 0:
             printf("[%d] It's child\n", getpid());
+            dup2(f, 1);
             close(fd1[1]);
             close(fd2[0]);
             while(read(fd1[0], &size, sizeof(int))){
@@ -36,8 +37,9 @@ int main(){
                 read(fd1[0], s.data(), size * sizeof(char));
                 if(65 <= int(s[0]) and int(s[0]) <= 90){
                     std::cout << s << "\n";
-                    f << s << "\n";
+                    //f << s << "\n";
                 } else {
+                    s = "Error in string " + s;
                     int size = s.length();
                     write(fd2[1], &size, sizeof(int));
                     write(fd2[1], s.data(), sizeof(char) * size);
@@ -50,7 +52,7 @@ int main(){
             printf("[%d] It's parent. Child id: %d\n", getpid(), id);
             close(fd1[0]);
             close(fd2[1]);
-            while(std::cin >> s && s != "quit"){
+            while(std::cin >> s && s != "EOF"){
                 size = s.length();
                 write(fd1[1], &size, sizeof(int));
                 write(fd1[1], s.data(), (size * sizeof(char)));
@@ -59,10 +61,10 @@ int main(){
             while(read(fd2[0], &size, sizeof(int))){
                 s.resize(size);
                 read(fd2[0], s.data(), (size * sizeof(char)));
-                std::cout << "Error in string " << s << "\n";
+                std::cout << s << "\n";
             }
             close(fd2[0]);
-            f.close();
             return 0;
+            close(f);
     }   
 }
