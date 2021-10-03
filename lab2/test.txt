@@ -1,0 +1,22 @@
+Print input name of file: test.txt
+[3987] It's parent. Child id: 4012
+[4012] It's child
+String
+string
+mAmaa
+nopoaASASasds
+  asSFAFAASFASfsafafa
+Child
+GOGOG
+aasda
+   
+Aasda
+Error in string string
+Error in string mAmaa
+Error in string nopoaASASasds
+Error in string asSFAFAASFASfsafafa
+Error in string aasda
+String
+Child
+GOGOG
+Aasda
