@@ -43,9 +43,15 @@ void prep(int str_num, int n, int m, int s, double *matrix, double *sviortka, do
 
 int main(){
     int n_errosion;
-    int K;
+    int K, N;
     cout << "Please input number of multiplications K: " << endl;
     cin >> K;
+    cout << "Please input number of threads if there are no restrictions enter -1: " << endl;
+    cin >> N;
+    if(!N || (N < 0 && N != -1)){
+        cout << "Error, please enter correct number of threads";
+        return 0;
+    }
     cout << "Insert size of errosion matrix: " << endl;
     cin >> n_errosion;
     double *errosion = new double[n_errosion * n_errosion];
@@ -88,16 +94,23 @@ int main(){
         b_results[i] = 0;
     }
     while(K > 0){
-        for(int i = 0; i < n - n_errosion + 1; i++){
-            cout << "\n\nI: " << i <<endl;
-            th_e[i] = thread(prep, i, n, m, n_errosion, matrix, errosion, e_results);
-            th_e[i].join();
-        }
-        for(int i = 0; i < n - n_errosion + 1; i++){
-            th_e[i] = thread(prep, i, n, m, n_errosion, matrix, errosion, e_results);
-        }
-        for(int i = 0; i < n - n_errosion + 1; i++){
-            th_e[i].join();
+        if(N == -1 || N >= n - n_errosion + 1){
+            for(int i = 0; i < n - n_errosion + 1; i++){
+                th_e[i] = thread(prep, i, n, m, n_errosion, matrix, errosion, e_results);
+            }
+            for(int i = 0; i < n - n_errosion + 1; i++){
+                th_e[i].join();
+            }
+        } else {
+            for(int i = 0; i < n - n_errosion + 1; i++){
+                if(i >= N && i != 0){
+                    th_e[i - N].join();
+                }
+                th_e[i] = thread(prep, i, n, m, n_errosion, matrix, errosion, e_results);
+            }
+            for(int i = n - n_errosion + 1 - N; i < n - n_errosion + 1; i++){
+                th_e[i].join();
+            }
         }
         int q = 0;
         for (int j = 0; j < n * m; j++){
@@ -108,11 +121,23 @@ int main(){
                 q++;
             }
         }
-        for(int i = 0; i < n - n_blinking + 1; i++){
-            th_b[i] = thread(prep, i, n, m, n_blinking, matrix2, blinking, b_results);
-        }
-        for(int i = 0; i < n - n_blinking + 1; i++){
-            th_b[i].join();
+        if(N == -1 || N >= n - n_blinking + 1){
+            for(int i = 0; i < n - n_blinking + 1; i++){
+                th_b[i] = thread(prep, i, n, m, n_blinking, matrix2, blinking, b_results);
+            }
+            for(int i = 0; i < n - n_blinking + 1; i++){
+                th_b[i].join();
+            }
+        } else {
+            for(int i = 0; i < n - n_blinking + 1; i++){
+                if(i >= N && i != 0){
+                    th_b[i - N].join();
+                }
+                th_b[i] = thread(prep, i, n, m, n_blinking, matrix2, blinking, b_results);
+            }
+            for(int i = n - n_blinking + 1 - N; i < n - n_blinking + 1; i++){
+                th_b[i].join();
+            }
         }
         int p = 0;
         for (int j = 0; j < n * m; j++){
@@ -139,4 +164,4 @@ int main(){
             cout << endl; 
         }
     }
-} 
+}  
