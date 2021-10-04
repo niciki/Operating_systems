@@ -164,4 +164,10 @@ int main(){
             cout << endl; 
         }
     }
+    delete errosion;
+    delete blinking;
+    delete matrix;
+    delete matrix2;
+    delete e_results;
+    delete b_results;
 }  
