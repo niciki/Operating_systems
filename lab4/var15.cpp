@@ -107,7 +107,6 @@ int main(){
             int idx = 0;
             int length = 0;
             sem_post(output_semaphore);
-            std::cout << "parent\n";
             while(std::cin >> s && s != "EOF"){
                 s = s + "\n";
                 length += s.length() * sizeof(char);
@@ -120,15 +119,15 @@ int main(){
                 }
             }
             sem_post(input_semaphore);
+            s = "";
+            int ind = 0;
+            sem_wait(output_semaphore);
+            sem_wait(input_semaphore);
             struct stat st;
             if(fstat(pipe2, &st)){
                 std::cout << "Error during fstat\n";
                 exit(1); 
             }
-            s = "";
-            int ind = 0;
-            sem_wait(output_semaphore);
-            sem_wait(input_semaphore);
             while(ind <= st.st_size){
                 if(pipe_2[ind] != '\n'){
                     s += pipe_2[ind++];
@@ -142,8 +141,8 @@ int main(){
             close(pipe1);
             close(pipe2);
             close(f);
-            /*remove("pipe1.txt");
-            remove("pipe2.txt");*/
+            remove("pipe1.txt");
+            remove("pipe2.txt");
             sem_destroy(input_semaphore);
             sem_destroy(output_semaphore);
             return 0;
