@@ -37,13 +37,18 @@ int main(){
             case 0:
                 if(f){
                     dlclose(handle);
+                    char* error = dlerror();   
+                    if(error){
+                        cout << error << '\n';
+                        return 2;
+                    }
                     handle = dlopen(name1, RTLD_LAZY);
                     if(!handle){
                         cout << "Error during uploading dynamic library\n";
                         return 1;
                     }
                     Square = (float(*)(float, float))dlsym(handle, "Square");
-                    char* error = dlerror();
+                    error = dlerror();
                     if(error){
                         cout << error << '\n';
                         return 2;
@@ -57,6 +62,11 @@ int main(){
                     f = false;
                 } else {
                     dlclose(handle);
+                    char* error = dlerror();   
+                    if(error){
+                        cout << error << '\n';
+                        return 2;
+                    }
                     handle = dlopen(name2, RTLD_LAZY);
                     if(!handle){
                         cout << "Error during uploading dynamic library\n";

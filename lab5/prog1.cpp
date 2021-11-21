@@ -4,8 +4,8 @@
 
 using namespace std;
 
-extern float Square(float A, float B);
-extern void translation(long n, char* c);
+extern "C" float Square(float A, float B);
+extern "C" void translation(long n, char* c);
 
 int main(){
     int n;
