@@ -73,7 +73,7 @@ int main(){
                         return 1;
                     }
                     Square = (float(*)(float, float))dlsym(handle, "Square");
-                    char* error = dlerror();
+                    error = dlerror();
                     if(error){
                         cout << error << '\n';
                         return 2;
@@ -96,20 +96,46 @@ int main(){
                 int z;
                 cin >> z;
                 int size;
-                if(z == 0){
-                    size = 1; 
-                } else{
-                    size = ceil(log2(z)/log2(3));
-                    if(int(log2(z)/log2(3)) == (log2(z)/log2(3)) || z == 1){
-                        ++size;
+                if(f){
+                    if(z < 0){
+                        cout << "Please input correct data!\n";
+                        break;
                     }
+                    if(z == 0){
+                        size = 1; 
+                    } else{
+                        size = ceil(log2(z)/log2(3));
+                        if(int(log2(z)/log2(3)) == (log2(z)/log2(3)) || z == 1){
+                            ++size;
+                        }
+                    }
+                    char c[size];
+                    translation(z, c);
+                    for(int i = 0; i < size; i++){
+                        cout << c[i];
+                    }
+                    cout  << '\n';
+                } else {
+                    if(z < 0){
+                        cout << "Please input correct data!\n";
+                        break;
+                    }
+                    int size = 0;
+                    if(z == 0){
+                        size = 1; 
+                    } else{
+                        size = ceil(log2(z));
+                        if(int(log2(z)) == (log2(z)) || z == 1){
+                            ++size;
+                        }
+                    }
+                    char c[size];
+                    translation(z, c);
+                    for(int i = 0; i < size; i++){
+                        cout << c[i];
+                    }
+                    cout  << '\n';  
                 }
-                char c[size];
-                translation(z, c);
-                for(int i = 0; i < size; i++){
-                    cout << c[i];
-                }
-                cout  << '\n';
                 break;
             }
             default:
