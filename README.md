@@ -1,4 +1,4 @@
-Laboratory work on the course "Operating Systems". <br\>
+Laboratory work on the course "Operating Systems". <br/>
 Variants of laboratory works:
 - ***2 lab*** - 15
 - ***3 lab*** - 11
